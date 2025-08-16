@@ -13,7 +13,31 @@ interface LocationData {
   commonCrops: string[];
 }
 
+interface LanguageData {
+  code: string;
+  name: string;
+  nativeName: string;
+}
+
+interface TranslatedResponse {
+  en: string[];
+  es: string[];
+  fr: string[];
+  pt: string[];
+  hi: string[];
+}
+
 class DialogueSystem {
+  private currentLanguage: string = "en";
+  
+  private languages: LanguageData[] = [
+    { code: "en", name: "English", nativeName: "English" },
+    { code: "es", name: "Spanish", nativeName: "Español" },
+    { code: "fr", name: "French", nativeName: "Français" },
+    { code: "pt", name: "Portuguese", nativeName: "Português" },
+    { code: "hi", name: "Hindi", nativeName: "हिन्दी" }
+  ];
+
   private currentLocation: LocationData = {
     name: "Central Valley, California",
     climate: "Mediterranean",
@@ -119,6 +143,63 @@ class DialogueSystem {
     ]
   };
 
+  // Multilingual responses with translations
+  private translatedWelcomeMessages: TranslatedResponse = {
+    en: [
+      "Hey there! 🌱 I'm your farm assistant, and I'm so excited to help you today! I've been keeping an eye on your crops, and everything's looking pretty great. What would you like to check on first?",
+      "Good morning! Hope you're having a wonderful day. I've been monitoring your farm overnight, and your plants are doing well. Anything specific you'd like to know about?",
+      "Hello! Great to see you back. I love helping farmers like you take the best care of their crops. Your dedication really shows in how healthy everything looks!"
+    ],
+    es: [
+      "¡Hola! 🌱 Soy tu asistente agrícola, ¡y estoy muy emocionado de ayudarte hoy! He estado cuidando tus cultivos, y todo se ve bastante bien. ¿Qué te gustaría revisar primero?",
+      "¡Buenos días! Espero que tengas un día maravilloso. He estado monitoreando tu granja durante la noche, y tus plantas están bien. ¿Hay algo específico que te gustaría saber?",
+      "¡Hola! Es genial verte de vuelta. Me encanta ayudar a agricultores como tú a cuidar mejor sus cultivos. ¡Tu dedicación realmente se nota en lo saludable que se ve todo!"
+    ],
+    fr: [
+      "Salut ! 🌱 Je suis votre assistant agricole, et je suis très content de vous aider aujourd'hui ! J'ai surveillé vos cultures, et tout semble très bien. Que souhaitez-vous vérifier en premier ?",
+      "Bonjour ! J'espère que vous passez une merveilleuse journée. J'ai surveillé votre ferme pendant la nuit, et vos plantes vont bien. Y a-t-il quelque chose de spécifique que vous aimeriez savoir ?",
+      "Bonjour ! Ravi de vous revoir. J'adore aider les agriculteurs comme vous à prendre le meilleur soin de leurs cultures. Votre dévouement se voit vraiment dans la santé de tout !"
+    ],
+    pt: [
+      "Olá! 🌱 Sou seu assistente agrícola, e estou muito animado para ajudá-lo hoje! Tenho estado de olho em suas plantações, e tudo está parecendo muito bom. O que gostaria de verificar primeiro?",
+      "Bom dia! Espero que tenha um dia maravilhoso. Estive monitorando sua fazenda durante a noite, e suas plantas estão bem. Há algo específico que gostaria de saber?",
+      "Olá! Ótimo te ver de volta. Adoro ajudar agricultores como você a cuidar melhor de suas plantações. Sua dedicação realmente aparece na saúde de tudo!"
+    ],
+    hi: [
+      "नमस्ते! 🌱 मैं आपका कृषि सहायक हूं, और आज आपकी मदद करने के लिए बहुत उत्साहित हूं! मैं आपकी फसलों पर नज़र रख रहा हूं, और सब कुछ बहुत अच्छा लग रहा है। आप पहले क्या जांचना चाहेंगे?",
+      "सुप्रभात! आशा है कि आपका दिन शानदार हो रहा है। मैं रात भर आपके खेत की निगरानी कर रहा था, और आपके पौधे अच्छे हैं। कुछ खास जानना चाहते हैं?",
+      "नमस्ते! आपको वापस देखकर खुशी हुई। मुझे आपके जैसे किसानों की अपनी फसलों की सबसे अच्छी देखभाल करने में मदद करना अच्छा लगता है। आपकी मेहनत सच में सब कुछ की सेहत में दिखती है!"
+    ]
+  };
+
+  private translatedGrowthTips: TranslatedResponse = {
+    en: [
+      "Here's what I've noticed: your crops are responding really well to the current care routine! One tip - morning watering tends to work better than evening for your soil type.",
+      "Your plants are growing beautifully! If you want to boost growth, consider adding some organic compost to Zone 2. The soil there could use a nutrient boost.",
+      "Great job on maintaining your crops! For even better growth, try adjusting your watering schedule to early morning. Plants absorb water more efficiently then."
+    ],
+    es: [
+      "Esto es lo que he notado: ¡tus cultivos están respondiendo muy bien a la rutina de cuidado actual! Un consejo: el riego matutino tiende a funcionar mejor que el vespertino para tu tipo de suelo.",
+      "¡Tus plantas están creciendo hermosamente! Si quieres impulsar el crecimiento, considera agregar compost orgánico a la Zona 2. El suelo allí podría necesitar un impulso de nutrientes.",
+      "¡Excelente trabajo manteniendo tus cultivos! Para un crecimiento aún mejor, intenta ajustar tu horario de riego a primera hora de la mañana. Las plantas absorben agua más eficientemente entonces."
+    ],
+    fr: [
+      "Voici ce que j'ai remarqué : vos cultures répondent très bien à la routine de soins actuelle ! Un conseil - l'arrosage matinal tend à mieux fonctionner que le soir pour votre type de sol.",
+      "Vos plantes poussent magnifiquement ! Si vous voulez stimuler la croissance, pensez à ajouter du compost organique à la Zone 2. Le sol là-bas pourrait avoir besoin d'un boost nutritionnel.",
+      "Excellent travail pour maintenir vos cultures ! Pour une croissance encore meilleure, essayez d'ajuster votre programme d'arrosage tôt le matin. Les plantes absorbent l'eau plus efficacement à ce moment-là."
+    ],
+    pt: [
+      "Aqui está o que notei: suas plantações estão respondendo muito bem à rotina de cuidados atual! Uma dica - a irrigação matinal tende a funcionar melhor que a noturna para seu tipo de solo.",
+      "Suas plantas estão crescendo lindamente! Se quer impulsionar o crescimento, considere adicionar composto orgânico à Zona 2. O solo lá poderia usar um impulso de nutrientes.",
+      "Excelente trabalho mantendo suas plantações! Para um crescimento ainda melhor, tente ajustar seu cronograma de irrigação para o início da manhã. As plantas absorvem água mais eficientemente então."
+    ],
+    hi: [
+      "यहाँ है जो मैंने देखा है: आपकी फसलें वर्तमान देखभाल की दिनचर्या के लिए बहुत अच्छी तरह से प्रतिक्रिया दे रही हैं! एक सुझाव - सुबह की सिंचाई आपकी मिट्टी के प्रकार के लिए शाम की तुलना में बेहतर काम करती है।",
+      "आपके पौधे सुंदर तरीके से बढ़ रहे हैं! यदि आप वृद्धि को बढ़ावा देना चाहते हैं, तो जोन 2 में जैविक खाद डालने पर विचार करें। वहाँ की मिट्टी को पोषक तत्वों की जरूरत हो सकती है।",
+      "अपनी फसलों को बनाए रखने का शानदार काम! और भी बेहतर वृद्धि के लिए, अपनी सिंचाई का समय सुबह जल्दी करने की कोशिश करें। पौधे तब पानी को अधिक कुशलता से अवशोषित करते हैं।"
+    ]
+  };
+
   private responses: DialogueResponse[] = [
     {
       keywords: ["hello", "hi", "hey", "start"],
@@ -200,14 +281,23 @@ class DialogueSystem {
     },
   ];
 
-  private welcomeMessages = [
-    "Hey there! 🌱 I'm your farm assistant, and I'm so excited to help you today! I've been keeping an eye on your crops, and everything's looking pretty great. What would you like to check on first?",
-    "Good morning! Hope you're having a wonderful day. I've been monitoring your farm overnight, and your plants are doing well. Anything specific you'd like to know about?",
-    "Hello! Great to see you back. I love helping farmers like you take the best care of their crops. Your dedication really shows in how healthy everything looks!",
-  ];
+  setLanguage(languageCode: string): void {
+    if (this.languages.find(lang => lang.code === languageCode)) {
+      this.currentLanguage = languageCode;
+    }
+  }
+
+  getCurrentLanguage(): string {
+    return this.currentLanguage;
+  }
+
+  getAvailableLanguages(): LanguageData[] {
+    return this.languages;
+  }
 
   getWelcomeMessage(): string {
-    return this.welcomeMessages[Math.floor(Math.random() * this.welcomeMessages.length)];
+    const messages = this.translatedWelcomeMessages[this.currentLanguage as keyof TranslatedResponse] || this.translatedWelcomeMessages.en;
+    return messages[Math.floor(Math.random() * messages.length)];
   }
 
   setLocation(locationName: string): void {
