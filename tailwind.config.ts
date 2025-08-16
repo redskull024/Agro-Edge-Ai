@@ -44,6 +44,10 @@ export default {
 					DEFAULT: 'hsl(var(--accent))',
 					foreground: 'hsl(var(--accent-foreground))'
 				},
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))'
+				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
 					foreground: 'hsl(var(--popover-foreground))'
@@ -52,6 +56,12 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				'chat-ai': 'hsl(var(--chat-ai-bubble))',
+				'chat-user': 'hsl(var(--chat-user-bubble))',
+				'chat-bg': 'hsl(var(--chat-background))',
+				'sensor-good': 'hsl(var(--sensor-good))',
+				'sensor-warning': 'hsl(var(--sensor-warning))',
+				'sensor-danger': 'hsl(var(--sensor-danger))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -84,11 +94,46 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'chat-message-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(10px) scale(0.95)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0) scale(1)'
+					}
+				},
+				'pulse-gentle': {
+					'0%, 100%': {
+						opacity: '1'
+					},
+					'50%': {
+						opacity: '0.7'
+					}
+				},
+				'typing-indicator': {
+					'0%, 60%, 100%': {
+						transform: 'translateY(0)'
+					},
+					'30%': {
+						transform: 'translateY(-5px)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'chat-message-in': 'chat-message-in 0.3s ease-out',
+				'pulse-gentle': 'pulse-gentle 2s ease-in-out infinite',
+				'typing-indicator': 'typing-indicator 1.4s ease-in-out infinite'
+			},
+			backgroundImage: {
+				'gradient-sunrise': 'var(--gradient-sunrise)',
+				'gradient-forest': 'var(--gradient-forest)',
+				'gradient-sky': 'var(--gradient-sky)',
+				'gradient-earth': 'var(--gradient-earth)'
 			}
 		}
 	},

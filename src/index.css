@@ -2,39 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* AgroEdge AI Farm Assistant Design System
+All colors MUST be HSL for beautiful, cohesive theming.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Natural farm-inspired color palette */
+    --background: 120 20% 98%;
+    --foreground: 140 15% 15%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 120 25% 97%;
+    --card-foreground: 140 15% 15%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 120 25% 97%;
+    --popover-foreground: 140 15% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary: Forest green for trust and growth */
+    --primary: 140 60% 35%;
+    --primary-foreground: 120 20% 98%;
+    
+    /* Secondary: Warm earth tone */
+    --secondary: 25 35% 92%;
+    --secondary-foreground: 140 15% 15%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Muted: Soft sage for backgrounds */
+    --muted: 120 15% 94%;
+    --muted-foreground: 140 10% 45%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Accent: Sky blue for alerts and highlights */
+    --accent: 200 85% 65%;
+    --accent-foreground: 120 20% 98%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Warning: Sunset orange for attention */
+    --warning: 35 85% 65%;
+    --warning-foreground: 120 20% 98%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 120 20% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 120 20% 88%;
+    --input: 120 20% 88%;
+    --ring: 140 60% 35%;
+
+    /* Chat-specific colors */
+    --chat-ai-bubble: 140 45% 95%;
+    --chat-user-bubble: 140 60% 35%;
+    --chat-background: 120 25% 99%;
+    
+    /* Farm sensor status colors */
+    --sensor-good: 120 60% 45%;
+    --sensor-warning: 45 85% 55%;
+    --sensor-danger: 0 75% 55%;
+
+    /* Gradients for visual richness */
+    --gradient-sunrise: linear-gradient(135deg, hsl(35, 85%, 75%), hsl(25, 80%, 65%));
+    --gradient-forest: linear-gradient(135deg, hsl(140, 60%, 35%), hsl(120, 55%, 45%));
+    --gradient-sky: linear-gradient(135deg, hsl(200, 85%, 65%), hsl(210, 75%, 75%));
+    --gradient-earth: linear-gradient(135deg, hsl(25, 35%, 92%), hsl(35, 25%, 88%));
 
     --radius: 0.5rem;
 
