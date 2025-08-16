@@ -3,9 +3,122 @@ import { Message } from "@/components/ChatInterface";
 interface DialogueResponse {
   keywords: string[];
   responses: string[];
+  location?: string;
+}
+
+interface LocationData {
+  name: string;
+  climate: string;
+  season: string;
+  commonCrops: string[];
 }
 
 class DialogueSystem {
+  private currentLocation: LocationData = {
+    name: "Central Valley, California",
+    climate: "Mediterranean",
+    season: "Late Summer",
+    commonCrops: ["tomatoes", "lettuce", "corn", "peppers"]
+  };
+
+  private locations: LocationData[] = [
+    {
+      name: "Central Valley, California",
+      climate: "Mediterranean",
+      season: "Late Summer",
+      commonCrops: ["tomatoes", "lettuce", "corn", "peppers"]
+    },
+    {
+      name: "Iowa Midwest",
+      climate: "Continental",
+      season: "Late Summer",
+      commonCrops: ["corn", "soybeans", "wheat", "oats"]
+    },
+    {
+      name: "Florida Gulf Coast",
+      climate: "Subtropical",
+      season: "Growing Season",
+      commonCrops: ["citrus", "tomatoes", "peppers", "strawberries"]
+    },
+    {
+      name: "Pacific Northwest",
+      climate: "Oceanic",
+      season: "Harvest Time",
+      commonCrops: ["apples", "berries", "leafy greens", "potatoes"]
+    }
+  ];
+
+  private locationSpecificTips: Record<string, DialogueResponse[]> = {
+    "Central Valley, California": [
+      {
+        keywords: ["growth", "tips", "advice", "help"],
+        responses: [
+          "With this Mediterranean climate, your crops love the warm days and cool nights! For your tomatoes, morning watering is crucial here - it helps them handle the afternoon heat better.",
+          "In the Central Valley, watch out for powdery mildew on your crops. The dry air helps, but good air circulation between plants is key. Space them well!",
+          "Perfect weather for peppers right now! They thrive in this heat. Just make sure to keep soil moisture consistent - these clay soils can crack when they dry out."
+        ]
+      },
+      {
+        keywords: ["weather", "temperature", "heat"],
+        responses: [
+          "Classic Central Valley weather - hot and dry! Your crops are adapted to this, but watch water levels closely. The valley heat can be intense.",
+          "This Mediterranean climate is perfect for your summer crops. Just remember, when temps hit 35°C+, provide afternoon shade for sensitive plants like lettuce."
+        ]
+      }
+    ],
+    "Iowa Midwest": [
+      {
+        keywords: ["growth", "tips", "advice", "help"],
+        responses: [
+          "Your corn is looking great! In Iowa, this is prime growing season. Watch for corn borers - they're common here in late summer. Crop rotation with soybeans next season will help soil health.",
+          "The humid continental climate here is perfect for your soybeans right now. They're filling pods beautifully! Keep an eye on white mold - the humidity can encourage it.",
+          "With Iowa's rich soil, your crops have everything they need. Just watch drainage after heavy rains - these prairie soils can get waterlogged quickly."
+        ]
+      },
+      {
+        keywords: ["weather", "rain", "humidity"],
+        responses: [
+          "Typical Midwest weather patterns! The humidity is great for corn and soybeans. If storms are coming, check for hail damage on leaves after they pass.",
+          "This continental climate gives you those perfect growing degree days. Your corn is loving the warm, humid conditions right now."
+        ]
+      }
+    ],
+    "Florida Gulf Coast": [
+      {
+        keywords: ["growth", "tips", "advice", "help"],
+        responses: [
+          "Your citrus trees are thriving in this subtropical climate! Watch for citrus canker during humid periods - good air circulation is crucial here.",
+          "Perfect growing weather for peppers and tomatoes! The warmth and humidity are ideal. Just watch for late blight on tomatoes - it spreads fast in this climate.",
+          "Your strawberries are doing well for this time of year! In Florida, they prefer the cooler morning hours. Consider shade cloth during the hottest part of the day."
+        ]
+      },
+      {
+        keywords: ["weather", "humidity", "heat"],
+        responses: [
+          "Classic Gulf Coast weather - warm and humid! Your tropical and subtropical crops love this. Just ensure good ventilation to prevent fungal issues.",
+          "The subtropical climate here means year-round growing! Perfect for your citrus. Watch for afternoon thunderstorms - they can bring beneficial rain but also strong winds."
+        ]
+      }
+    ],
+    "Pacific Northwest": [
+      {
+        keywords: ["growth", "tips", "advice", "help"],
+        responses: [
+          "Your apple trees are entering harvest season! This oceanic climate with cool, moist air is perfect for them. Watch for apple scab during wet periods.",
+          "The berries are loving this climate! Cool temperatures and regular moisture are ideal. Your blueberries should be finishing up their harvest soon.",
+          "Perfect weather for leafy greens! They thrive in this cool, moist Pacific climate. Just watch for slug damage - they're common here in damp conditions."
+        ]
+      },
+      {
+        keywords: ["weather", "rain", "moisture"],
+        responses: [
+          "Typical Pacific Northwest weather! The consistent moisture is great for your crops. Your potatoes especially love this cool, damp climate.",
+          "This oceanic climate provides steady growing conditions. Perfect for your berries and apples! Just ensure good drainage to prevent root rot."
+        ]
+      }
+    ]
+  };
+
   private responses: DialogueResponse[] = [
     {
       keywords: ["hello", "hi", "hey", "start"],
@@ -97,10 +210,35 @@ class DialogueSystem {
     return this.welcomeMessages[Math.floor(Math.random() * this.welcomeMessages.length)];
   }
 
+  setLocation(locationName: string): void {
+    const location = this.locations.find(loc => loc.name === locationName);
+    if (location) {
+      this.currentLocation = location;
+    }
+  }
+
+  getCurrentLocation(): LocationData {
+    return this.currentLocation;
+  }
+
+  getAvailableLocations(): LocationData[] {
+    return this.locations;
+  }
+
   generateResponse(userInput: string): string {
     const lowerInput = userInput.toLowerCase();
     
-    // Find matching response category
+    // Check for location-specific responses first
+    const locationTips = this.locationSpecificTips[this.currentLocation.name];
+    if (locationTips) {
+      for (const category of locationTips) {
+        if (category.keywords.some(keyword => lowerInput.includes(keyword))) {
+          return category.responses[Math.floor(Math.random() * category.responses.length)];
+        }
+      }
+    }
+    
+    // Fall back to general responses
     for (const category of this.responses) {
       if (category.keywords.some(keyword => lowerInput.includes(keyword))) {
         return category.responses[Math.floor(Math.random() * category.responses.length)];
@@ -109,9 +247,9 @@ class DialogueSystem {
 
     // Default responses for unmatched input
     const defaultResponses = [
-      "That's a great question! I'm still learning about all aspects of farming. Let me think about that and get back to you with some helpful information.",
-      "I appreciate you asking! While I'm focused on monitoring your sensors and basic farm care, I'd love to connect you with one of our experts who can give you detailed advice on that topic.",
-      "You know what? I want to make sure I give you the best possible answer. Let me reach out to our farming specialists - they'll have much better insights on this than I do right now.",
+      `That's a great question! I'm still learning about farming in ${this.currentLocation.name}. Let me think about that and get back to you with some helpful information.`,
+      `I appreciate you asking! While I'm focused on monitoring your sensors and basic farm care here in ${this.currentLocation.name}, I'd love to connect you with one of our local experts who can give you detailed advice on that topic.`,
+      `You know what? I want to make sure I give you the best possible answer for your ${this.currentLocation.climate} climate. Let me reach out to our farming specialists - they'll have much better insights on this than I do right now.`,
     ];
 
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
